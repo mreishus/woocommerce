@@ -6,6 +6,7 @@ use Automattic\WooCommerce\Blocks\Domain\Services\Hydration;
 use Automattic\WooCommerce\Internal\Logging\RemoteLogger;
 use Exception;
 use InvalidArgumentException;
+use \WC_Option_Registry;
 
 /**
  * Class instance for registering data used on the current view session by
@@ -67,6 +68,10 @@ class AssetDataRegistry {
 	 * Hook into WP asset registration for enqueueing asset data.
 	 */
 	protected function init() {
+		WC_Option_Registry::instance()->register_options( array(
+			'woocommerce_terms_page_id',                  // wc_terms_and_conditions_page_id()
+			'woocommerce_feature_remote_logging_enabled', // is_remote_logging_allowed()
+		) );
 		add_action( 'init', array( $this, 'register_data_script' ) );
 		add_action( is_admin() ? 'admin_print_footer_scripts' : 'wp_print_footer_scripts', array( $this, 'enqueue_asset_data' ), 1 );
 	}

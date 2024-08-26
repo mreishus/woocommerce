@@ -297,6 +297,7 @@ final class WooCommerce {
 		add_action( 'init', array( 'WC_Emails', 'init_transactional_emails' ) );
 		add_action( 'init', array( $this, 'add_image_sizes' ) );
 		add_action( 'init', array( $this, 'load_rest_api' ) );
+		add_action( 'init', array( $this, 'prime_option_caches' ) );
 		if ( $this->is_request( 'admin' ) || ( $this->is_rest_api_request() && ! $this->is_store_api_request() ) || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			add_action( 'init', array( 'WC_Site_Tracking', 'init' ) );
 		}
@@ -343,6 +344,18 @@ final class WooCommerce {
 		foreach ( $hook_register_classes as $hook_register_class ) {
 			$hook_register_class->register();
 		}
+	}
+
+	/*
+	 * Prime option caches for registered options.
+	 */
+	public function prime_option_caches() {
+		// Some options are used without classes, so we need to prime the cache for them.
+		WC_Option_Registry::instance()->register_options( array(
+			'woocommerce_demo_store', // wc_body_class() -> is_store_notice_showing()
+		) );
+		$options = WC_Option_Registry::instance()->get_registered_options();
+		wp_prime_option_caches( $options );
 	}
 
 	/**
@@ -635,6 +648,7 @@ final class WooCommerce {
 		include_once WC_ABSPATH . 'includes/class-wc-meta-data.php';
 		include_once WC_ABSPATH . 'includes/class-wc-order-factory.php';
 		include_once WC_ABSPATH . 'includes/class-wc-order-query.php';
+		include_once WC_ABSPATH . 'includes/class-wc-option-registry.php';
 		include_once WC_ABSPATH . 'includes/class-wc-product-factory.php';
 		include_once WC_ABSPATH . 'includes/class-wc-product-query.php';
 		include_once WC_ABSPATH . 'includes/class-wc-payment-tokens.php';

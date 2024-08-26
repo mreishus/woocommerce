@@ -9,6 +9,7 @@ use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use Automattic\WooCommerce\Internal\Features\FeaturesController;
 use WC_Helper_Updater;
 use WC_Woo_Update_Manager_Plugin;
+use \WC_Option_Registry;
 
 /**
  * Contains backend logic for the Marketplace feature.
@@ -23,6 +24,9 @@ class Marketplace {
 	 * @internal
 	 */
 	final public function init() {
+		WC_Option_Registry::instance()->register_options( [
+			'woocommerce_feature_marketplace_enabled',
+		] );
 		add_action( 'init', array( $this, 'on_init' ) );
 	}
 

@@ -7,7 +7,7 @@ namespace Automattic\WooCommerce\Admin\Features\OnboardingTasks;
 
 use Automattic\WooCommerce\Admin\Features\OnboardingTasks\Task;
 use Automattic\WooCommerce\Admin\WCAdminHelper;
-
+use WC_Option_Registry;
 
 /**
  * Task List class.
@@ -150,6 +150,7 @@ class TaskList {
 		}
 
 		$this->possibly_remove_reminder_bar();
+		WC_Option_Registry::instance()->register_options( array( self::HIDDEN_OPTION ) );
 	}
 
 	/**

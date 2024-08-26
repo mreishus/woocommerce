@@ -35,6 +35,12 @@ class WC_Cache_Helper {
 		add_action( 'wp', array( __CLASS__, 'prevent_caching' ) );
 		add_action( 'clean_term_cache', array( __CLASS__, 'clean_term_cache' ), 10, 2 );
 		add_action( 'edit_terms', array( __CLASS__, 'clean_term_cache' ), 10, 2 );
+		// Register options that are used in prevent_caching().
+		WC_Option_Registry::instance()->register_options( [
+			'woocommerce_myaccount_page_id',
+			'woocommerce_checkout_page_id',
+			'woocommerce_cart_page_id',
+		] );
 	}
 
 	/**

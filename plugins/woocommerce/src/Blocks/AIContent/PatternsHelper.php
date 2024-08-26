@@ -3,11 +3,19 @@
 namespace Automattic\WooCommerce\Blocks\AIContent;
 
 use WP_Error;
+use \WP_Option_Registry;
 
 /**
  * Patterns Helper class.
  */
 class PatternsHelper {
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		WC_Option_Registry::instance()->register_option( 'woocommerce_blocks_allow_ai_connection' );
+	}
+
 	/**
 	 * Fetches the AI-selected image for the pattern or returns the default image.
 	 *

@@ -141,10 +141,27 @@ final class BlockTypesController {
 		return false;
 	}
 
+    /**
+     * Prime option caches for block registration.
+     */
+    protected function prime_option_caches() {
+		if ( ! function_exists( 'wp_prime_option_caches' ) ) {
+			// This function was added in WP 6.4.
+			return;
+		}
+
+        $options_to_prime = [
+			     'woocommerce_registration_generate_password', // Checkout.php
+        ];
+
+		wp_prime_option_caches( $options_to_prime );
+	}
+
 	/**
 	 * Register blocks, hooking up assets and render functions as needed.
 	 */
 	public function register_blocks() {
+		$this->prime_option_caches();
 		$block_types = $this->get_block_types();
 
 		foreach ( $block_types as $block_type ) {

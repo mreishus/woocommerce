@@ -6,6 +6,7 @@ use Automattic\WooCommerce\Admin\Features\Features;
 use Automattic\WooCommerce\Internal\Admin\Onboarding\OnboardingProfile;
 use Automattic\WooCommerce\Admin\Features\OnboardingTasks\Task;
 use WC_Data_Store;
+use \WC_Option_Registry;
 
 /**
  * Shipping Task
@@ -28,6 +29,7 @@ class Shipping extends Task {
 		add_action( 'wp_ajax_woocommerce_shipping_zone_methods_save_changes', array( __CLASS__, 'delete_zone_count_transient' ), 9 );
 		add_action( 'woocommerce_shipping_zone_method_added', array( __CLASS__, 'delete_zone_count_transient' ), 9 );
 		add_action( 'woocommerce_after_shipping_zone_object_save', array( __CLASS__, 'delete_zone_count_transient' ), 9 );
+		WC_Option_Registry::instance()->register_option( 'woocommerce_admin_created_default_shipping_zones' );
 	}
 
 	/**
@@ -85,6 +87,7 @@ class Shipping extends Task {
 	 */
 	public function can_view() {
 		if ( Features::is_enabled( 'shipping-smart-defaults' ) ) {
+
 			if ( 'yes' === get_option( 'woocommerce_admin_created_default_shipping_zones' ) ) {
 				// If the user has already created a default shipping zone, we don't need to show the task.
 				return false;

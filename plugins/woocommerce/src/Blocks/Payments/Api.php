@@ -7,6 +7,7 @@ use Automattic\WooCommerce\Blocks\Payments\Integrations\BankTransfer;
 use Automattic\WooCommerce\Blocks\Payments\Integrations\CashOnDelivery;
 use Automattic\WooCommerce\Blocks\Payments\Integrations\Cheque;
 use Automattic\WooCommerce\Blocks\Payments\Integrations\PayPal;
+use \WC_Option_Registry;
 
 /**
  *  The Api class provides an interface to payment method registration.
@@ -49,6 +50,12 @@ class Api {
 		add_action( 'woocommerce_blocks_cart_enqueue_data', array( $this, 'add_payment_method_script_data' ) );
 		add_action( 'woocommerce_blocks_payment_method_type_registration', array( $this, 'register_payment_method_integrations' ) );
 		add_action( 'wp_print_scripts', array( $this, 'verify_payment_methods_dependencies' ), 1 );
+
+		WC_Option_Registry::instance()->register_options([
+			// MiniCart -> do_action("woocommerce_blocks_cart_enqueue_data") -> add_payment_method_script_data() -> payment_gateways()
+			'woocommerce_bacs_accounts',
+			'woocommerce_gateway_order',
+		] );
 	}
 
 	/**

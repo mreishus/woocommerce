@@ -138,6 +138,16 @@ class WC_Shipping {
 		// For backwards compatibility with 2.5.x we load any ENABLED legacy shipping methods here.
 		$maybe_load_legacy_methods = array( 'flat_rate', 'free_shipping', 'international_delivery', 'local_delivery', 'local_pickup' );
 
+		if ( function_exists( 'wp_prime_option_caches' ) ) {
+			// Prime the option cache for the settings we're about to look up.
+			// Note: It's too late to use the option registry here.
+			$option_names = array_map( function( $method ) {
+				return 'woocommerce_' . $method . '_settings';
+			}, $maybe_load_legacy_methods );
+
+			wp_prime_option_caches( $option_names );
+		}
+
 		foreach ( $maybe_load_legacy_methods as $method ) {
 			$options = get_option( 'woocommerce_' . $method . '_settings' );
 			if ( $options && isset( $options['enabled'] ) && 'yes' === $options['enabled'] ) {

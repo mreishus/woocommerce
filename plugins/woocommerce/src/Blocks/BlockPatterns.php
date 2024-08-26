@@ -7,6 +7,7 @@ use Automattic\WooCommerce\Blocks\Domain\Package;
 use Automattic\WooCommerce\Blocks\Patterns\PatternRegistry;
 use Automattic\WooCommerce\Blocks\Patterns\PTKPatternsStore;
 use WP_Error;
+use \WC_Option_Registry;
 
 /**
  * Registers patterns under the `./patterns/` directory and from the PTK API and updates their content.
@@ -85,6 +86,7 @@ class BlockPatterns {
 		add_action( 'init', array( $this, 'register_block_patterns' ) );
 
 		if ( Features::is_enabled( 'pattern-toolkit-full-composability' ) ) {
+			WC_Option_Registry::instance()->register_option( 'woocommerce_allow_tracking' );
 			add_action( 'init', array( $this, 'register_ptk_patterns' ) );
 		}
 	}
