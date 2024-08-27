@@ -24,7 +24,11 @@ class BaseLocationCountryRuleProcessor implements RuleProcessorInterface {
 	 * @return bool The result of the operation.
 	 */
 	public function process( $rule, $stored_state ) {
-		$base_location = wc_get_base_location();
+		static $base_location = null;
+		if ( null === $base_location ) {
+			$base_location = wc_get_base_location();
+		}
+
 		if (
 			! is_array( $base_location ) ||
 			! array_key_exists( 'country', $base_location ) ||
@@ -33,7 +37,11 @@ class BaseLocationCountryRuleProcessor implements RuleProcessorInterface {
 			return false;
 		}
 
-		$onboarding_profile   = get_option( 'woocommerce_onboarding_profile', array() );
+		static $onboarding_profile = null;
+		if ( null === $onboarding_profile ) {
+			$onboarding_profile = get_option( 'woocommerce_onboarding_profile', array() );
+		}
+
 		$is_address_default   = 'US' === $base_location['country'] && 'CA' === $base_location['state'] && empty( get_option( 'woocommerce_store_address', '' ) );
 		$is_store_country_set = isset( $onboarding_profile['is_store_country_set'] ) && $onboarding_profile['is_store_country_set'];
 
